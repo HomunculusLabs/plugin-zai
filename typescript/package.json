@@ -1,5 +1,5 @@
 {
-  "name": "@elizaos/plugin-zai",
+  "name": "@homunculuslabs/plugin-zai",
   "version": "2.0.0-alpha.1",
   "type": "module",
   "main": "dist/node/index.node.js",
@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elizaos-plugins/plugin-zai.git"
+    "url": "git+https://github.com/HomunculusLabs/plugin-zai.git"
   },
   "exports": {
     "./package.json": "./package.json",

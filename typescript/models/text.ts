@@ -39,7 +39,7 @@ function resolveTextParams(
   if (topPExplicit && temperatureExplicit) {
     throw new Error(
       "Cannot use both temperature and topP parameters simultaneously. " +
-        "Anthropic's API only supports one at a time. Please provide only one."
+        "This API only supports one at a time. Please provide only one."
     );
   }
 

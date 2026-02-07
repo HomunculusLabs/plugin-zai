@@ -43,7 +43,7 @@ async function generateObjectByModelType(
 ): Promise<Record<string, unknown>> {
   const anthropic = createAnthropicClient(runtime);
 
-  logger.log(`[Anthropic] Using ${modelType} model: ${modelName}`);
+  logger.log(`[z.ai] Using ${modelType} model: ${modelName}`);
 
   const schema = params.schema as JsonSchema | undefined;
   const isReflection = isReflectionSchema(schema);
@@ -62,7 +62,7 @@ async function generateObjectByModelType(
     emitModelUsageEvent(runtime, modelType, params.prompt, usage);
   }
 
-  logger.debug("Attempting to parse response from Anthropic model");
+  logger.debug("Attempting to parse response from z.ai model");
   const jsonObject: ExtractedJSON = extractAndParseJSON(text);
 
   if (
@@ -71,9 +71,9 @@ async function generateObjectByModelType(
     "type" in jsonObject &&
     jsonObject.type === "unstructured_response"
   ) {
-    logger.error(`Failed to parse JSON from Anthropic response`);
+    logger.error(`Failed to parse JSON from z.ai response`);
     logger.error(`Raw response: ${text}`);
-    throw new Error("Invalid JSON returned from Anthropic model: could not extract valid JSON");
+    throw new Error("Invalid JSON returned from z.ai model: could not extract valid JSON");
   }
 
   const processedObject = ensureReflectionProperties(jsonObject, isReflection);

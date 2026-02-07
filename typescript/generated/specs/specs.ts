@@ -1,5 +1,5 @@
 /**
- * Auto-generated canonical action/provider/evaluator docs for plugin-anthropic.
+ * Auto-generated canonical action/provider/evaluator docs for plugin-zai.
  * DO NOT EDIT - Generated from prompts/specs/**.
  */
 

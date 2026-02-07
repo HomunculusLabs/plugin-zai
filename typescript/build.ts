@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 /**
- * Build script for @elizaos/plugin-zai (Node + Browser)
+ * Build script for @homunculuslabs/plugin-zai (Node + Browser)
  *
  * This script builds the TypeScript source for both Node.js and browser environments.
  */
@@ -18,7 +18,7 @@ async function build() {
 
   // Node build
   const nodeStart = Date.now();
-  console.log("🔨 Building @elizaos/plugin-zai for Node...");
+  console.log("🔨 Building @homunculuslabs/plugin-zai for Node...");
   const nodeResult = await Bun.build({
     entrypoints: ["index.node.ts"],
     outdir: join(distDir, "node"),
@@ -36,7 +36,7 @@ async function build() {
 
   // Browser build
   const browserStart = Date.now();
-  console.log("🌐 Building @elizaos/plugin-zai for Browser...");
+  console.log("🌐 Building @homunculuslabs/plugin-zai for Browser...");
   const browserResult = await Bun.build({
     entrypoints: ["index.browser.ts"],
     outdir: join(distDir, "browser"),
@@ -55,7 +55,7 @@ async function build() {
 
   // Node CJS build
   const cjsStart = Date.now();
-  console.log("🧱 Building @elizaos/plugin-zai for Node (CJS)...");
+  console.log("🧱 Building @homunculuslabs/plugin-zai for Node (CJS)...");
   const cjsResult = await Bun.build({
     entrypoints: ["index.node.ts"],
     outdir: join(distDir, "cjs"),

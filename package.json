@@ -25,7 +25,7 @@
     "rust/Cargo.toml"
   ],
   "keywords": [],
-  "author": "elizaOS",
+  "author": "HomunculusLabs",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -64,36 +64,43 @@
   "agentConfig": {
     "pluginType": "elizaos:plugin:1.0.0",
     "pluginParameters": {
-      "ANTHROPIC_API_KEY": {
+      "ZAI_API_KEY": {
         "type": "string",
-        "description": "API key used to authenticate requests to Anthropic services",
+        "description": "API key used to authenticate requests to z.ai (Anthropic-compatible)",
         "required": true,
         "sensitive": true
       },
-      "ANTHROPIC_SMALL_MODEL": {
+      "ZAI_BASE_URL": {
         "type": "string",
-        "description": "Override the default Anthropic small model identifier used by the plugin",
+        "description": "Base URL for z.ai's Anthropic-compatible API (should end with /v1)",
         "required": false,
-        "default": "claude-3-5-haiku-20241022",
+        "default": "https://api.z.ai/api/anthropic/v1",
         "sensitive": false
       },
-      "ANTHROPIC_LARGE_MODEL": {
+      "ZAI_SMALL_MODEL": {
         "type": "string",
-        "description": "Override the default Anthropic large model identifier used by the plugin",
+        "description": "Override the default z.ai small model identifier",
         "required": false,
         "default": "claude-sonnet-4-20250514",
         "sensitive": false
       },
-      "ANTHROPIC_EXPERIMENTAL_TELEMETRY": {
+      "ZAI_LARGE_MODEL": {
+        "type": "string",
+        "description": "Override the default z.ai large model identifier",
+        "required": false,
+        "default": "claude-sonnet-4-20250514",
+        "sensitive": false
+      },
+      "ZAI_EXPERIMENTAL_TELEMETRY": {
         "type": "boolean",
         "description": "Enable experimental telemetry features for enhanced debugging and usage analytics.",
         "required": false,
         "default": false,
         "sensitive": false
       },
-      "ANTHROPIC_BROWSER_BASE_URL": {
+      "ZAI_BROWSER_BASE_URL": {
         "type": "string",
-        "description": "Browser-only proxy endpoint base URL for Anthropic requests (no secrets in the client).",
+        "description": "Browser-only proxy endpoint base URL for z.ai requests (no secrets in the client).",
         "required": false,
         "sensitive": false
       }

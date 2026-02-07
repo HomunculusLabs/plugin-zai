@@ -63,9 +63,9 @@ function resolveTextParams(
     : {};
 
   if (cotBudget > 0) {
-    const existingAnthropic = providerOptions.anthropic ?? {};
-    (providerOptions as { anthropic: Record<string, unknown> }).anthropic = {
-      ...existingAnthropic,
+    const existingZai = providerOptions.zai ?? {};
+    (providerOptions as { zai: Record<string, unknown> }).zai = {
+      ...existingZai,
       thinking: { type: "enabled", budgetTokens: cotBudget },
     };
   }
@@ -93,7 +93,7 @@ async function generateTextWithModel(
   const experimentalTelemetry = getExperimentalTelemetry(runtime);
   const cotBudget = getCoTBudget(runtime, modelSize);
 
-  logger.log(`[Anthropic] Using ${modelType} model: ${modelName}`);
+  logger.log(`[z.ai] Using ${modelType} model: ${modelName}`);
 
   const resolved = resolveTextParams(params, modelName, cotBudget);
 

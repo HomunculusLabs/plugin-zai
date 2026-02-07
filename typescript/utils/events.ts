@@ -22,7 +22,7 @@ export function emitModelUsageEvent(
 
   runtime.emitEvent(EventType.MODEL_USED, {
     runtime,
-    source: "anthropic",
+    source: "zai",
     type,
     tokens: {
       prompt: promptTokens,

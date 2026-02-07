@@ -2,9 +2,15 @@ import type { IAgentRuntime } from "@elizaos/core";
 import type { ModelName, ModelSize, ValidatedApiKey } from "../types";
 import { assertValidApiKey, createModelName } from "../types";
 
-const DEFAULT_SMALL_MODEL = "claude-3-5-haiku-20241022";
+// z.ai exposes an Anthropic-compatible API. The model identifiers are
+// Claude-style aliases that z.ai maps server-side to GLM models.
+const DEFAULT_SMALL_MODEL = "claude-sonnet-4-20250514";
 const DEFAULT_LARGE_MODEL = "claude-sonnet-4-20250514";
-const DEFAULT_BASE_URL = "https://api.anthropic.com/v1";
+
+// IMPORTANT: Anthropic SDK expects a base URL that ends with /v1
+// (e.g. https://api.anthropic.com/v1). z.ai's compatible endpoint is:
+// https://api.z.ai/api/anthropic/v1
+const DEFAULT_BASE_URL = "https://api.z.ai/api/anthropic/v1";
 
 export function isBrowser(): boolean {
   return (
@@ -37,13 +43,13 @@ function getRawSetting(runtime: IAgentRuntime, key: string): string | undefined 
 }
 
 export function getApiKey(runtime: IAgentRuntime): ValidatedApiKey {
-  const apiKey = getRawSetting(runtime, "ANTHROPIC_API_KEY");
+  const apiKey = getRawSetting(runtime, "ZAI_API_KEY");
   assertValidApiKey(apiKey);
   return apiKey;
 }
 
 export function getApiKeyOptional(runtime: IAgentRuntime): ValidatedApiKey | null {
-  const apiKey = getRawSetting(runtime, "ANTHROPIC_API_KEY");
+  const apiKey = getRawSetting(runtime, "ZAI_API_KEY");
   if (!apiKey || apiKey.trim().length === 0) {
     return null;
   }
@@ -52,26 +58,29 @@ export function getApiKeyOptional(runtime: IAgentRuntime): ValidatedApiKey | nul
 
 export function getBaseURL(runtime: IAgentRuntime): string {
   if (isBrowser()) {
-    const browserURL = getRawSetting(runtime, "ANTHROPIC_BROWSER_BASE_URL");
+    const browserURL = getRawSetting(runtime, "ZAI_BROWSER_BASE_URL");
     if (browserURL) {
       return browserURL;
     }
   }
-  return getRawSetting(runtime, "ANTHROPIC_BASE_URL") ?? DEFAULT_BASE_URL;
+
+  const raw = getRawSetting(runtime, "ZAI_BASE_URL") ?? DEFAULT_BASE_URL;
+  // normalize to /v1 (some callers may pass https://api.z.ai/api/anthropic)
+  return /\/v1\/?$/.test(raw) ? raw : `${raw.replace(/\/+$/, "")}/v1`;
 }
 
 export function getSmallModel(runtime: IAgentRuntime): ModelName {
-  const model = getRawSetting(runtime, "ANTHROPIC_SMALL_MODEL") ?? DEFAULT_SMALL_MODEL;
+  const model = getRawSetting(runtime, "ZAI_SMALL_MODEL") ?? DEFAULT_SMALL_MODEL;
   return createModelName(model);
 }
 
 export function getLargeModel(runtime: IAgentRuntime): ModelName {
-  const model = getRawSetting(runtime, "ANTHROPIC_LARGE_MODEL") ?? DEFAULT_LARGE_MODEL;
+  const model = getRawSetting(runtime, "ZAI_LARGE_MODEL") ?? DEFAULT_LARGE_MODEL;
   return createModelName(model);
 }
 
 export function getExperimentalTelemetry(runtime: IAgentRuntime): boolean {
-  const setting = getRawSetting(runtime, "ANTHROPIC_EXPERIMENTAL_TELEMETRY");
+  const setting = getRawSetting(runtime, "ZAI_EXPERIMENTAL_TELEMETRY");
   if (!setting) {
     return false;
   }
@@ -79,8 +88,7 @@ export function getExperimentalTelemetry(runtime: IAgentRuntime): boolean {
 }
 
 export function getCoTBudget(runtime: IAgentRuntime, modelSize: ModelSize): number {
-  const specificKey =
-    modelSize === "small" ? "ANTHROPIC_COT_BUDGET_SMALL" : "ANTHROPIC_COT_BUDGET_LARGE";
+  const specificKey = modelSize === "small" ? "ZAI_COT_BUDGET_SMALL" : "ZAI_COT_BUDGET_LARGE";
 
   const specificValue = getRawSetting(runtime, specificKey);
   if (specificValue !== undefined) {
@@ -91,7 +99,7 @@ export function getCoTBudget(runtime: IAgentRuntime, modelSize: ModelSize): numb
     return 0;
   }
 
-  const sharedValue = getRawSetting(runtime, "ANTHROPIC_COT_BUDGET");
+  const sharedValue = getRawSetting(runtime, "ZAI_COT_BUDGET");
   if (sharedValue !== undefined) {
     const parsed = parseInt(sharedValue, 10);
     if (!Number.isNaN(parsed) && parsed > 0) {

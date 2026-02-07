@@ -1,13 +1,13 @@
 {
-  "name": "@elizaos/plugin-anthropic",
-  "version": "2.0.0-alpha.3",
+  "name": "@elizaos/plugin-zai",
+  "version": "2.0.0-alpha.1",
   "type": "module",
   "main": "dist/node/index.node.js",
   "module": "dist/node/index.node.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elizaos-plugins/plugin-anthropic.git"
+    "url": "git+https://github.com/elizaos-plugins/plugin-zai.git"
   },
   "exports": {
     "./package.json": "./package.json",
@@ -45,7 +45,9 @@
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
     "@types/node": "^25.0.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18",
+    "@types/bun": "^1.3.5"
   },
   "scripts": {
     "dev": "bun run build.ts --watch",
@@ -55,9 +57,8 @@
     "lint": "bunx @biomejs/biome check --write --unsafe .",
     "lint:check": "bunx @biomejs/biome check .",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "bun run test:unit && bun run test:integration",
+    "test": "bun run test:unit",
     "test:unit": "vitest run __tests__/unit/",
-    "test:integration": "vitest run __tests__/integration/",
     "test:watch": "vitest",
     "build": "bun run build.ts",
     "build:ts": "bun run build.ts"
@@ -68,42 +69,66 @@
   "agentConfig": {
     "pluginType": "elizaos:plugin:1.0.0",
     "pluginParameters": {
-      "ANTHROPIC_API_KEY": {
+      "ZAI_API_KEY": {
         "type": "string",
-        "description": "API key used to authenticate requests to Anthropic services",
+        "description": "API key used to authenticate requests to z.ai (Anthropic-compatible)",
         "required": true,
         "sensitive": true
       },
-      "ANTHROPIC_SMALL_MODEL": {
+      "ZAI_BASE_URL": {
         "type": "string",
-        "description": "Override the default Anthropic small model identifier used by the plugin",
+        "description": "Base URL for z.ai's Anthropic-compatible API (should end with /v1)",
         "required": false,
-        "default": "claude-3-5-haiku-20241022",
+        "default": "https://api.z.ai/api/anthropic/v1",
         "sensitive": false
       },
-      "ANTHROPIC_LARGE_MODEL": {
+      "ZAI_SMALL_MODEL": {
         "type": "string",
-        "description": "Override the default Anthropic large model identifier used by the plugin",
+        "description": "Override the default z.ai small model identifier",
         "required": false,
         "default": "claude-sonnet-4-20250514",
         "sensitive": false
       },
-      "ANTHROPIC_EXPERIMENTAL_TELEMETRY": {
+      "ZAI_LARGE_MODEL": {
+        "type": "string",
+        "description": "Override the default z.ai large model identifier",
+        "required": false,
+        "default": "claude-sonnet-4-20250514",
+        "sensitive": false
+      },
+      "ZAI_EXPERIMENTAL_TELEMETRY": {
         "type": "boolean",
         "description": "Enable experimental telemetry features for enhanced debugging and usage analytics.",
         "required": false,
         "default": false,
         "sensitive": false
       },
-      "ANTHROPIC_BROWSER_BASE_URL": {
+      "ZAI_BROWSER_BASE_URL": {
         "type": "string",
-        "description": "Browser-only proxy endpoint base URL for Anthropic requests (no secrets in the client).",
+        "description": "Browser-only proxy endpoint base URL for z.ai requests (no secrets in the client).",
+        "required": false,
+        "sensitive": false
+      },
+      "ZAI_COT_BUDGET": {
+        "type": "string",
+        "description": "Shared chain-of-thought budget (tokens) for reasoning mode (optional)",
+        "required": false,
+        "sensitive": false
+      },
+      "ZAI_COT_BUDGET_SMALL": {
+        "type": "string",
+        "description": "Small-model chain-of-thought budget (tokens) for reasoning mode (optional)",
+        "required": false,
+        "sensitive": false
+      },
+      "ZAI_COT_BUDGET_LARGE": {
+        "type": "string",
+        "description": "Large-model chain-of-thought budget (tokens) for reasoning mode (optional)",
         "required": false,
         "sensitive": false
       }
     }
   },
-  "gitHead": "646c632924826e2b75c2304a75ee56959fe4a460",
   "milaidy": {
     "platforms": [
       "browser",

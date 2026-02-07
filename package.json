@@ -1,5 +1,5 @@
 {
-  "name": "@elizaos/plugin-anthropic-root",
+  "name": "@elizaos/plugin-zai-root",
   "private": true,
   "version": "2.0.0-alpha.1",
   "description": "",
@@ -29,7 +29,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elizaos-plugins/plugin-anthropic.git"
+    "url": "git+https://github.com/elizaos-plugins/plugin-zai.git"
   },
   "scripts": {
     "build": "bun run build:ts && bun run build:rust && bun run build:python",

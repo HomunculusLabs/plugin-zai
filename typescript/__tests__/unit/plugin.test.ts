@@ -1,42 +1,43 @@
 /**
- * Unit tests for the Anthropic plugin structure.
+ * Unit tests for the z.ai plugin structure.
  *
  * These tests verify the plugin exports and structure without making API calls.
  */
 
 import { describe, expect, it } from "vitest";
 
-describe("Anthropic Plugin Structure", () => {
-  it("should export anthropicPlugin with correct structure", async () => {
-    const { anthropicPlugin } = await import("../../index");
+describe("z.ai Plugin Structure", () => {
+  it("should export zaiPlugin with correct structure", async () => {
+    const { zaiPlugin } = await import("../../index");
 
-    expect(anthropicPlugin).toBeDefined();
-    expect(anthropicPlugin.name).toBe("anthropic");
-    expect(anthropicPlugin.description).toContain("Anthropic");
-    expect(anthropicPlugin.config).toBeDefined();
-    expect(anthropicPlugin.models).toBeDefined();
-    expect(anthropicPlugin.init).toBeDefined();
-    expect(typeof anthropicPlugin.init).toBe("function");
+    expect(zaiPlugin).toBeDefined();
+    expect(zaiPlugin.name).toBe("zai");
+    expect(zaiPlugin.description).toContain("z.ai");
+    expect(zaiPlugin.config).toBeDefined();
+    expect(zaiPlugin.models).toBeDefined();
+    expect(zaiPlugin.init).toBeDefined();
+    expect(typeof zaiPlugin.init).toBe("function");
   });
 
   it("should have all required model handlers", async () => {
-    const { anthropicPlugin } = await import("../../index");
+    const { zaiPlugin } = await import("../../index");
     const { ModelType } = await import("@elizaos/core");
 
-    expect(anthropicPlugin.models).toBeDefined();
-    expect(anthropicPlugin.models?.[ModelType.TEXT_SMALL]).toBeDefined();
-    expect(anthropicPlugin.models?.[ModelType.TEXT_LARGE]).toBeDefined();
-    expect(anthropicPlugin.models?.[ModelType.OBJECT_SMALL]).toBeDefined();
-    expect(anthropicPlugin.models?.[ModelType.OBJECT_LARGE]).toBeDefined();
+    expect(zaiPlugin.models).toBeDefined();
+    expect(zaiPlugin.models?.[ModelType.TEXT_SMALL]).toBeDefined();
+    expect(zaiPlugin.models?.[ModelType.TEXT_LARGE]).toBeDefined();
+    expect(zaiPlugin.models?.[ModelType.OBJECT_SMALL]).toBeDefined();
+    expect(zaiPlugin.models?.[ModelType.OBJECT_LARGE]).toBeDefined();
   });
 
   it("should have config with expected environment variables", async () => {
-    const { anthropicPlugin } = await import("../../index");
+    const { zaiPlugin } = await import("../../index");
 
-    const config = anthropicPlugin.config as Record<string, unknown>;
-    expect(config).toHaveProperty("ANTHROPIC_API_KEY");
-    expect(config).toHaveProperty("ANTHROPIC_SMALL_MODEL");
-    expect(config).toHaveProperty("ANTHROPIC_LARGE_MODEL");
+    const config = zaiPlugin.config as Record<string, unknown>;
+    expect(config).toHaveProperty("ZAI_API_KEY");
+    expect(config).toHaveProperty("ZAI_SMALL_MODEL");
+    expect(config).toHaveProperty("ZAI_LARGE_MODEL");
+    expect(config).toHaveProperty("ZAI_BASE_URL");
   });
 
   it("should export types", async () => {
@@ -71,7 +72,7 @@ describe("Configuration Utilities", () => {
     const smallModel = getSmallModel(agentRuntime as never);
     const largeModel = getLargeModel(agentRuntime as never);
 
-    expect(smallModel).toBe("claude-3-5-haiku-20241022");
+    expect(smallModel).toBe("claude-sonnet-4-20250514");
     expect(largeModel).toBe("claude-sonnet-4-20250514");
   });
 
@@ -80,8 +81,8 @@ describe("Configuration Utilities", () => {
 
     const agentRuntime = {
       getSetting: (key: string) => {
-        if (key === "ANTHROPIC_SMALL_MODEL") return "custom-small";
-        if (key === "ANTHROPIC_LARGE_MODEL") return "custom-large";
+        if (key === "ZAI_SMALL_MODEL") return "custom-small";
+        if (key === "ZAI_LARGE_MODEL") return "custom-large";
         return undefined;
       },
     };
@@ -125,6 +126,6 @@ describe("Type Guards", () => {
 
     expect(() => createModelName("")).toThrow();
     expect(() => createModelName("   ")).toThrow();
-    expect(createModelName("claude-3-5-haiku")).toBe("claude-3-5-haiku");
+    expect(createModelName("claude-sonnet-4-20250514")).toBe("claude-sonnet-4-20250514");
   });
 });

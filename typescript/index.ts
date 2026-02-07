@@ -8,7 +8,7 @@ import type {
   TestSuite,
 } from "@elizaos/core";
 import { logger, ModelType } from "@elizaos/core";
-import { initializeAnthropic, type PluginConfig } from "./init";
+import { initializeZai, type PluginConfig } from "./init";
 import { handleObjectLarge, handleObjectSmall, handleTextLarge, handleTextSmall } from "./models";
 import { getApiKeyOptional } from "./utils/config";
 
@@ -16,20 +16,20 @@ export type { PluginConfig } from "./init";
 
 const pluginTests = [
   {
-    name: "anthropic_plugin_tests",
+    name: "zai_plugin_tests",
     tests: [
       {
-        name: "anthropic_test_api_key_validation",
+        name: "zai_test_api_key_validation",
         fn: async (runtime: IAgentRuntime) => {
           const apiKey = getApiKeyOptional(runtime);
           if (!apiKey) {
-            throw new Error("ANTHROPIC_API_KEY is not configured");
+            throw new Error("ZAI_API_KEY is not configured");
           }
-          logger.log("Anthropic API key is configured");
+          logger.log("z.ai API key is configured");
         },
       },
       {
-        name: "anthropic_test_text_small",
+        name: "zai_test_text_small",
         fn: async (runtime: IAgentRuntime) => {
           const text = await runtime.useModel(ModelType.TEXT_SMALL, {
             prompt: "What is the nature of reality in 10 words?",
@@ -43,7 +43,7 @@ const pluginTests = [
         },
       },
       {
-        name: "anthropic_test_text_large",
+        name: "zai_test_text_large",
         fn: async (runtime: IAgentRuntime) => {
           const text = await runtime.useModel(ModelType.TEXT_LARGE, {
             prompt: "What is the nature of reality in 10 words?",
@@ -57,7 +57,7 @@ const pluginTests = [
         },
       },
       {
-        name: "anthropic_test_object_small",
+        name: "zai_test_object_small",
         fn: async (runtime: IAgentRuntime) => {
           const result = await runtime.useModel(ModelType.OBJECT_SMALL, {
             prompt: "Create a simple JSON object with a message field saying hello",
@@ -76,7 +76,7 @@ const pluginTests = [
         },
       },
       {
-        name: "anthropic_test_object_large",
+        name: "zai_test_object_large",
         fn: async (runtime: IAgentRuntime) => {
           const result = await runtime.useModel(ModelType.OBJECT_LARGE, {
             prompt: "Create a simple JSON object with a message field saying hello",
@@ -92,25 +92,6 @@ const pluginTests = [
           }
 
           logger.log({ result }, "Generated object with test_object_large");
-        },
-      },
-      {
-        name: "anthropic_test_object_with_code_blocks",
-        fn: async (runtime: IAgentRuntime) => {
-          const result = await runtime.useModel(ModelType.OBJECT_SMALL, {
-            prompt: "Give me instructions to install Node.js",
-            schema: { type: "object" },
-          });
-
-          if (!result || typeof result !== "object") {
-            throw new Error("Failed to generate object with code blocks: invalid response");
-          }
-
-          if ("error" in result) {
-            throw new Error(`Failed to generate object: ${String(result["error"])}`);
-          }
-
-          logger.log({ result }, "Generated object with code blocks");
         },
       },
     ] as TestCase[],
@@ -129,24 +110,24 @@ function getProcessEnv(): ProcessEnvLike {
 
 const env = getProcessEnv();
 
-export const anthropicPlugin: Plugin = {
-  name: "anthropic",
-  description: "Anthropic plugin (supports text and object generation)",
+export const zaiPlugin: Plugin = {
+  name: "zai",
+  description: "z.ai plugin (Anthropic-compatible; supports text and object generation)",
 
   config: {
-    ["ANTHROPIC_API_KEY"]: env["ANTHROPIC_API_KEY"] ?? null,
-    ["ANTHROPIC_SMALL_MODEL"]: env["ANTHROPIC_SMALL_MODEL"] ?? null,
-    ["ANTHROPIC_LARGE_MODEL"]: env["ANTHROPIC_LARGE_MODEL"] ?? null,
-    ["ANTHROPIC_EXPERIMENTAL_TELEMETRY"]: env["ANTHROPIC_EXPERIMENTAL_TELEMETRY"] ?? null,
-    ["ANTHROPIC_BASE_URL"]: env["ANTHROPIC_BASE_URL"] ?? null,
-    ["ANTHROPIC_BROWSER_BASE_URL"]: env["ANTHROPIC_BROWSER_BASE_URL"] ?? null,
-    ["ANTHROPIC_COT_BUDGET"]: env["ANTHROPIC_COT_BUDGET"] ?? null,
-    ["ANTHROPIC_COT_BUDGET_SMALL"]: env["ANTHROPIC_COT_BUDGET_SMALL"] ?? null,
-    ["ANTHROPIC_COT_BUDGET_LARGE"]: env["ANTHROPIC_COT_BUDGET_LARGE"] ?? null,
+    ["ZAI_API_KEY"]: env["ZAI_API_KEY"] ?? null,
+    ["ZAI_SMALL_MODEL"]: env["ZAI_SMALL_MODEL"] ?? null,
+    ["ZAI_LARGE_MODEL"]: env["ZAI_LARGE_MODEL"] ?? null,
+    ["ZAI_EXPERIMENTAL_TELEMETRY"]: env["ZAI_EXPERIMENTAL_TELEMETRY"] ?? null,
+    ["ZAI_BASE_URL"]: env["ZAI_BASE_URL"] ?? null,
+    ["ZAI_BROWSER_BASE_URL"]: env["ZAI_BROWSER_BASE_URL"] ?? null,
+    ["ZAI_COT_BUDGET"]: env["ZAI_COT_BUDGET"] ?? null,
+    ["ZAI_COT_BUDGET_SMALL"]: env["ZAI_COT_BUDGET_SMALL"] ?? null,
+    ["ZAI_COT_BUDGET_LARGE"]: env["ZAI_COT_BUDGET_LARGE"] ?? null,
   },
 
   async init(config, runtime) {
-    initializeAnthropic(config as PluginConfig, runtime);
+    initializeZai(config as PluginConfig, runtime);
   },
 
   models: {
@@ -184,4 +165,4 @@ export const anthropicPlugin: Plugin = {
   tests: pluginTests as TestSuite[],
 };
 
-export default anthropicPlugin;
+export default zaiPlugin;
